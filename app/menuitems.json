@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "name": "MenuItem",
+    "menuimg": "img/birthdaycake.png",
+    "price": "50"
+
+  },
+  {
+    "id": 2,
+    "name": "MenuItem2",
+    "menuimg": "img/fries.png",
+    "price": "50"
+  },
+  {
+    "id": 3,
+    "name": "MenuItem3",
+    "menuimg": "img/hotdog.png",
+    "price": "70"
+  },
+  {
+    "id": 4,
+    "name": "MenuItem4",
+    "menuimg": "img/pancakes.png",
+    "price": "80"
+  },
+  {
+    "id": 5,
+    "name": "MenuItem6",
+    "menuimg":"img/pizza.png",
+    "price": "90"
+  }
+]
