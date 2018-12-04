@@ -20,22 +20,39 @@ export class App {
   async componentDidMount(){
     let tableData = await fetch('./app/tableitems.json')
     let tableitems = await tableData.json()
-    //this.setState({ tableitems: [ ...tableitems ] })
-
     let menuData = await fetch('./app/menuitems.json')
     let menuitems = await menuData.json()
-    //console.log(menuitems)
     this.setState({ tableitems: [ ...tableitems ], menuitems: [ ...menuitems ] })
 
   }
 
   selectTable(tableId){
-    //let tableId
-    // console.log('table clicked'+tableId)
-    // console.log(document.querySelector('#tableid'))
     document.querySelector('#tableid').textContent = tableId
   }
-/* not necessary
+
+  addFoodList(menuId,name,price){
+    // console.log(menuId+name+price)
+
+    // var foodList = document.createElement('ul')
+    var foodItem = document.createElement('li')
+    var foodText = document.createElement('h3')
+    var foodBtn = document.createElement('button')
+    var foodPrice = document.createElement('span')
+
+
+    foodText.textContent = name;
+    foodItem.appendChild(foodText);
+    foodBtn.textContent = '<i class="fa fa-times"></i>';
+    foodItem.appendChild(foodBtn);
+    foodPrice.textContent = price;
+    foodItem.appendChild(foodPrice);
+    
+    // foodList.appendChild(foodItem);
+    console.log(foodItem)
+    document.querySelector('#intro').appendChild = foodItem
+  }
+
+  /* not necessary
   addToList() {
     let item = {
       id: +new Date()
@@ -55,7 +72,7 @@ export class App {
     /*this.rootElement.children[2][3].innerHTML = tableList(this.state.tableitems)*/
     /*console.log(this.rootElement)*/
     this.rootElement.querySelector("#table").children[1].innerHTML = tableList(this.state.tableitems,this.selectTable)
-    this.rootElement.querySelector("#menu").innerHTML = menuList(this.state.menuitems)
+    this.rootElement.querySelector("#menu").innerHTML = menuList(this.state.menuitems,this.addFoodList)
   
   }
 
@@ -78,7 +95,7 @@ export class App {
         <div class="row">
           <div class="span2">
             <div id="menu">
-              ${menuList(this.state.menuitems)}
+              ${menuList(this.state.menuitems,this.addFoodList)}
             </div>            
           </div>
           <div class="span6">
@@ -100,7 +117,6 @@ export class App {
         </div>
       </div>
     </div>
-
     `
   }
 }

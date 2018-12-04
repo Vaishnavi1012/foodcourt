@@ -10,24 +10,24 @@
     "id": 2,
     "name": "Fries",
     "menuimg": "img/fries.png",
-    "price": "50"
+    "price": "30"
   },
   {
     "id": 3,
-    "name": "Hotdog ",
+    "name": "Hotdog",
     "menuimg": "img/hotdog.png",
-    "price": "70"
+    "price": "20"
   },
   {
     "id": 4,
     "name": "Pancakes",
     "menuimg": "img/pancakes.png",
-    "price": "80"
+    "price": "40"
   },
   {
     "id": 5,
     "name": "Pizza",
     "menuimg":"img/pizza.png",
-    "price": "90"
+    "price": "70"
   }
 ]
