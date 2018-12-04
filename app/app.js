@@ -1,4 +1,4 @@
-import { addElementForm } from './addElementForm.js' /* not necessary*/
+/*import { addElementForm } from './addElementForm.js'  not necessary*/
 import { tableList } from './tableList.js'
 import { menuList } from './menuList.js'
 
@@ -24,11 +24,17 @@ export class App {
 
     let menuData = await fetch('./app/menuitems.json')
     let menuitems = await menuData.json()
-    console.log(menuitems)
+    //console.log(menuitems)
     this.setState({ tableitems: [ ...tableitems ], menuitems: [ ...menuitems ] })
 
   }
 
+  selectTable(tableId){
+    //let tableId
+    // console.log('table clicked'+tableId)
+    // console.log(document.querySelector('#tableid'))
+    document.querySelector('#tableid').textContent = tableId
+  }
 /* not necessary
   addToList() {
     let item = {
@@ -48,7 +54,7 @@ export class App {
   refresh(){
     /*this.rootElement.children[2][3].innerHTML = tableList(this.state.tableitems)*/
     /*console.log(this.rootElement)*/
-    this.rootElement.querySelector("#table").children[1].innerHTML = tableList(this.state.tableitems)
+    this.rootElement.querySelector("#table").children[1].innerHTML = tableList(this.state.tableitems,this.selectTable)
     this.rootElement.querySelector("#menu").innerHTML = menuList(this.state.menuitems)
   
   }
@@ -62,7 +68,7 @@ export class App {
       <div id="table" class="clearfix">
           <h2 id="tableHeading">Tables</h2>
           <div class="tablelisting">
-            ${tableList(this.state.tableitems)}
+            ${tableList(this.state.tableitems,this.selectTable)}
           </div>
       </div>
       </div>
@@ -74,10 +80,27 @@ export class App {
             <div id="menu">
               ${menuList(this.state.menuitems)}
             </div>            
-          </div>  
+          </div>
+          <div class="span6">
+            <div id="details">
+              <h2 id="tableNumber">Table <span id="tableid">0</span></h2>
+              <ul id="intro">
+                <li id="default">
+                  <h3>Click a food to add it</h3>
+                </li>
+              </ul>
+              
+              <ul>
+                <li id="total">
+                  <h3>Total <span></span></h3>
+                </li>
+              </ul> 
+            </div>
+          </div> 
         </div>
       </div>
     </div>
+
     `
   }
 }

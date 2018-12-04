@@ -1,32 +1,32 @@
 [
   {
     "id": 1,
-    "name": "MenuItem",
+    "name": "Birthday Cake",
     "menuimg": "img/birthdaycake.png",
     "price": "50"
 
   },
   {
     "id": 2,
-    "name": "MenuItem2",
+    "name": "Fries",
     "menuimg": "img/fries.png",
     "price": "50"
   },
   {
     "id": 3,
-    "name": "MenuItem3",
+    "name": "Hotdog ",
     "menuimg": "img/hotdog.png",
     "price": "70"
   },
   {
     "id": 4,
-    "name": "MenuItem4",
+    "name": "Pancakes",
     "menuimg": "img/pancakes.png",
     "price": "80"
   },
   {
     "id": 5,
-    "name": "MenuItem6",
+    "name": "Pizza",
     "menuimg":"img/pizza.png",
     "price": "90"
   }
