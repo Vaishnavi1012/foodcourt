@@ -42,7 +42,7 @@ export class App {
 
     foodText.textContent = name;
     foodItem.appendChild(foodText);
-    foodBtn.textContent = '<i class="fa fa-times"></i>';
+    foodBtn.textContent = 'x <i class="fa fa-times"></i>';
     foodItem.appendChild(foodBtn);
     foodPrice.textContent = price;
     foodItem.appendChild(foodPrice);
