@@ -1,6 +1,7 @@
 /*import { addElementForm } from './addElementForm.js'  not necessary*/
 import { tableList } from './tableList.js'
 import { menuList } from './menuList.js'
+import { orderList } from './orderList.js'
 
 
 export class App {
@@ -10,11 +11,19 @@ export class App {
       tableitems: [],
       menuitems:[]
     }
+    this.orderState = {
+      orderitems:[]
+    }
+
   }
 
   setState(state){
     this.state = state;
     this.refresh()
+  }
+  setorderState(orderState){
+    this.orderState = orderState;
+    this.orderRefresh()
   }
 
   async componentDidMount(){
@@ -32,35 +41,23 @@ export class App {
 
   addFoodList(menuId,name,price){
     // console.log(menuId+name+price)
-
-    // var foodList = document.createElement('ul')
-    var foodItem = document.createElement('li')
-    var foodText = document.createElement('h3')
-    var foodBtn = document.createElement('button')
-    var foodPrice = document.createElement('span')
-
-
-    foodText.textContent = name;
-    foodItem.appendChild(foodText);
-    foodBtn.textContent = 'x <i class="fa fa-times"></i>';
-    foodItem.appendChild(foodBtn);
-    foodPrice.textContent = price;
-    foodItem.appendChild(foodPrice);
-    
-    // foodList.appendChild(foodItem);
-    console.log(foodItem)
-    document.querySelector('#intro').appendChild = foodItem
-  }
-
-  /* not necessary
-  addToList() {
     let item = {
-      id: +new Date()
+      id: +new Date(),
+      menuId : menuId,
+      name : name,
+      price :price
     }
-    item.name = document.getElementById('item').value
-    this.setState( { items: [ ...this.state.items, item ] })
+    //console.log(item)
+    this.setorderState( { orderitems: [ ...this.orderState.orderitems, item ] })
+
   }
 
+  deleteOrderListItem(orderId){
+    console.log(orderId)
+    let orderList = this.orderState.orderitems.filter( e => e.id !== parseInt(orderId))
+    this.setorderState({ orderitems: [...orderList] })
+  }
+  /* not necessary
   
   deleteFromList(idToDelete) {
     let newList = this.state.items.filter( e => e.id !== parseInt(idToDelete))
@@ -74,6 +71,10 @@ export class App {
     this.rootElement.querySelector("#table").children[1].innerHTML = tableList(this.state.tableitems,this.selectTable)
     this.rootElement.querySelector("#menu").innerHTML = menuList(this.state.menuitems,this.addFoodList)
   
+  }
+  orderRefresh(){
+    console.log('order refresh'+this.orderState.orderitems)
+    document.querySelector("#orderList").innerHTML = orderList(this.orderState.orderitems,this.deleteOrderListItem)
   }
 
   render() {
@@ -106,7 +107,8 @@ export class App {
                   <h3>Click a food to add it</h3>
                 </li>
               </ul>
-              
+              <div id="orderList">
+              </div>
               <ul>
                 <li id="total">
                   <h3>Total <span></span></h3>
