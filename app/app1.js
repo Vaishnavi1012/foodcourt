@@ -42,15 +42,7 @@ export class App {
   }
 
   addFoodList(menuId,name,price){
-    let currentTableId = document.querySelector('#tableid').textContent
-    console.log(currentTableId)
-    if(currentTableId==0){
-      alert('Please select a table first')
-      return false
-    }
-
-    var x = localStorage.getItem(currentTableId);
-    console.log(x)
+    // console.log(menuId+name+price)
     let orderItem = {
       id: +new Date(),
       menuId : menuId,
@@ -65,20 +57,18 @@ export class App {
 
     this.orderState.orderTotal = this.orderState.totalArr.reduce((a,b) => a + b, 0);
 
-    console.log(this.orderState.orderTotal);
+    // console.log(this.orderState.orderTotal);
 
     this.setorderState( { orderitems: [ ...this.orderState.orderitems, orderItem ],totalArr:[...this.orderState.totalArr],orderTotal:this.orderState.orderTotal})
-
-    // console.log(JSON.stringify(this.orderState.orderitems))
-    let orderJsonString = JSON.stringify([...this.orderState.orderitems])
-    console.log(orderJsonString)
-    localStorage.setItem(currentTableId,orderJsonString)
     
   }
 
   deleteOrderListItem(orderIdToDelete){
+    console.log(orderIdToDelete)
+    console.log(this.orderState.totalArr)
 
     let priceToDelete = this.orderState.orderitems.find(orderList => orderList.id == orderIdToDelete).price
+    console.log(priceToDelete)
     let priceIndex = ''
 
     for (var i = 0; i < this.orderState.orderitems.length; i++) {   
@@ -86,13 +76,16 @@ export class App {
       priceIndex =i;
       }
     }
+    console.log(priceIndex) 
     this.orderState.totalArr.splice(priceIndex, 1)
 
+    console.log(this.orderState.totalArr)
     this.orderState.orderitems.splice(priceIndex, 1)
 
     this.orderState.orderTotal = this.orderState.totalArr.reduce((a,b) => a + b, 0);
 
     let orderList = this.orderState.orderitems.filter( e => e.id !== parseInt(orderIdToDelete))
+    // console.log(orderList)
 
     this.setorderState({ orderitems: [...orderList],totalArr:[...this.orderState.totalArr],orderTotal:this.orderState.orderTotal })
   }
