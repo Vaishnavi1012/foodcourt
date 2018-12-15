@@ -55,15 +55,16 @@ export class App {
     //get ordered items selected using table id 
     let oldOrderedItem = JSON.parse(localStorage.getItem(tableId))
     console.log(oldOrderedItem)
-
-    let currentTotal = localStorage.getItem('currentTotal')
-    this.currentTotal = currentTotal
+    let currentTotalId = 'currentTotal_'+tableId
+    this.currentTotal = localStorage.getItem(currentTotalId)
     
     //this.rootElement.querySelector("#total").children[0].textContent = '$'+ tableTotal
-
+    this.setorderState.orderitems = []
     if(oldOrderedItem){
-      this.setorderState( { orderitems: [ ...oldOrderedItem ],orderTotal:this.currentTotal})
+
+      this.setorderState.orderitems = oldOrderedItem
     }
+    this.setorderState( { orderitems: [ ...this.setorderState.orderitems ],orderTotal:this.currentTotal})
   }
 
   addFoodList(menuId,name,price){
@@ -79,7 +80,8 @@ export class App {
     }
     
     let num = parseInt(orderItem.price)
-
+    console.log(num)
+    console.log(this.currentTotal)
     if(this.currentTotal){
       this.orderState.orderTotal = this.currentTotal
     }
@@ -91,11 +93,12 @@ export class App {
     let orderJsonString = JSON.stringify([...this.orderState.orderitems])
 
     let tableId = this.currentTableId 
-    console.log(this.currentTableId)
-    console.log('id'+tableId)
+    // console.log(this.currentTableId)
+    // console.log('id'+tableId)
+    let currentTotalId = 'currentTotal_'+tableId
 
     localStorage.setItem(tableId ,orderJsonString)
-    localStorage.setItem('currentTotal',this.orderState.orderTotal)
+    localStorage.setItem(currentTotalId,this.orderState.orderTotal)
   }
 
   deleteOrderListItem(orderIdToDelete){
@@ -115,7 +118,7 @@ export class App {
   orderRefresh(){
     // console.log('order total'+this.orderState.orderTotal)
     document.querySelector("#orderList").innerHTML = orderList(this.orderState.orderitems,this.deleteOrderListItem)
-    this.rootElement.querySelector("#total").children[0].innerHTML = '$'+ this.orderState.orderTotal
+    this.rootElement.querySelector("#total").children[1].innerHTML = '$'+ this.orderState.orderTotal
   }
 
   render() {
@@ -153,7 +156,8 @@ export class App {
               </div>
               <ul>
                 <li id="total">
-                  <h3>Total <span>${this.orderState.orderTotal}</span></h3>
+                  <h3>Total </h3>
+                  <h3>${this.orderState.orderTotal}</h3>
                 </li>
               </ul> 
             </div>
