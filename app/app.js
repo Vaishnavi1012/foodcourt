@@ -34,9 +34,7 @@ export class App {
     let menuData = await fetch('./app/menuitems.json')
     let menuitems = await menuData.json()
 
-    let currentTableId = localStorage.getItem("currentTableId")
-    
-    this.currentTableId = currentTableId
+    this.currentTableId= localStorage.getItem("currentTableId") || 0
 
     if(typeof this.currentTableId == 'string'){
       this.selectTable(this.currentTableId)
@@ -52,19 +50,22 @@ export class App {
     this.currentTableId = tableId
     localStorage.setItem("currentTableId",tableId)
 
-    //get ordered items selected using table id 
-    let oldOrderedItem = JSON.parse(localStorage.getItem(tableId))
-    console.log(oldOrderedItem)
-    let currentTotalId = 'currentTotal_'+tableId
-    this.currentTotal = localStorage.getItem(currentTotalId)
-    
-    //this.rootElement.querySelector("#total").children[0].textContent = '$'+ tableTotal
     this.setorderState.orderitems = []
-    if(oldOrderedItem){
+    //get ordered items selected using table id 
+    this.orderState.orderitems = JSON.parse(localStorage.getItem(tableId)) || []
+    console.log(this.orderState.orderitems)
 
-      this.setorderState.orderitems = oldOrderedItem
-    }
-    this.setorderState( { orderitems: [ ...this.setorderState.orderitems ],orderTotal:this.currentTotal})
+    let currentTotalId = 'currentTotal_'+tableId
+
+    this.currentTotal = localStorage.getItem(currentTotalId) || 0
+
+    this.orderState.orderTotal = this.currentTotal
+    
+    // if(oldOrderedItem){
+    //   this.orderState.orderitems = oldOrderedItem
+    //   this.orderState.orderTotal = this.currentTotal
+    // }
+    this.setorderState( { orderitems: [ ...this.orderState.orderitems ],orderTotal:this.orderState.orderTotal})
   }
 
   addFoodList(menuId,name,price){
@@ -80,12 +81,15 @@ export class App {
     }
     
     let num = parseInt(orderItem.price)
-    console.log(num)
-    console.log(this.currentTotal)
+    // console.log(num)
+    // console.log(this.currentTotal)
+
+
     if(this.currentTotal){
-      this.orderState.orderTotal = this.currentTotal
+      this.orderState.orderTotal = parseInt(this.currentTotal)
     }
     this.orderState.orderTotal = this.orderState.orderTotal + num
+
     console.log(this.orderState.orderTotal);
 
     this.setorderState( { orderitems: [ ...this.orderState.orderitems, orderItem ],orderTotal:this.orderState.orderTotal})
@@ -93,8 +97,6 @@ export class App {
     let orderJsonString = JSON.stringify([...this.orderState.orderitems])
 
     let tableId = this.currentTableId 
-    // console.log(this.currentTableId)
-    // console.log('id'+tableId)
     let currentTotalId = 'currentTotal_'+tableId
 
     localStorage.setItem(tableId ,orderJsonString)
@@ -157,7 +159,7 @@ export class App {
               <ul>
                 <li id="total">
                   <h3>Total </h3>
-                  <h3>${this.orderState.orderTotal}</h3>
+                  <h3>$${this.orderState.orderTotal}</h3>
                 </li>
               </ul> 
             </div>
