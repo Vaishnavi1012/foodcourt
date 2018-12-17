@@ -8,7 +8,6 @@ export class App {
   constructor(id){
     this.rootElement = document.getElementById(id)
     this.currentTableId = 0
-    this.currentTotal = 0
     this.state = {
       tableitems: [],
       menuitems:[]
@@ -35,14 +34,13 @@ export class App {
     let menuitems = await menuData.json()
 
     this.currentTableId= localStorage.getItem("currentTableId") || 0
-
+    
+    //displays exact values when last browser is closed
+    //start where you left
     if(typeof this.currentTableId == 'string'){
       this.selectTable(this.currentTableId)
     }
-
     this.setState({ tableitems: [ ...tableitems ], menuitems: [ ...menuitems ] })
-    // add code to store last selected table when browser is closed 
-    // this.setorderState( { orderitems: [ ...this.orderState.orderitems ],orderTotal:currentTotal})
   }
 
   selectTable(tableId){
@@ -50,27 +48,17 @@ export class App {
     this.currentTableId = tableId
     localStorage.setItem("currentTableId",tableId)
 
-    this.setorderState.orderitems = []
-    //get ordered items selected using table id 
     this.orderState.orderitems = JSON.parse(localStorage.getItem(tableId)) || []
-    console.log(this.orderState.orderitems)
 
-    let currentTotalId = 'currentTotal_'+tableId
+    let currentTotalId = 'totalFor_'+tableId
+    this.orderState.orderTotal = localStorage.getItem(currentTotalId) || 0
 
-    this.currentTotal = localStorage.getItem(currentTotalId) || 0
-
-    this.orderState.orderTotal = this.currentTotal
-    
-    // if(oldOrderedItem){
-    //   this.orderState.orderitems = oldOrderedItem
-    //   this.orderState.orderTotal = this.currentTotal
-    // }
     this.setorderState( { orderitems: [ ...this.orderState.orderitems ],orderTotal:this.orderState.orderTotal})
   }
 
   addFoodList(menuId,name,price){
-    if(!typeof this.currentTableId == 'string'){
-      alert('Please select a table first')
+    if(!typeof this.currentTableId == 'string' || this.currentTableId == 0){
+      alert('Please select a table first!!')
       return false
     }
     let orderItem = {
@@ -79,37 +67,33 @@ export class App {
       name : name,
       price :price
     }
-    
-    let num = parseInt(orderItem.price)
-    // console.log(num)
-    // console.log(this.currentTotal)
 
-
-    if(this.currentTotal){
-      this.orderState.orderTotal = parseInt(this.currentTotal)
-    }
-    this.orderState.orderTotal = this.orderState.orderTotal + num
-
-    console.log(this.orderState.orderTotal);
+    this.orderState.orderTotal = parseInt(this.orderState.orderTotal) + parseInt(orderItem.price)
 
     this.setorderState( { orderitems: [ ...this.orderState.orderitems, orderItem ],orderTotal:this.orderState.orderTotal})
 
     let orderJsonString = JSON.stringify([...this.orderState.orderitems])
 
-    let tableId = this.currentTableId 
-    let currentTotalId = 'currentTotal_'+tableId
+    let currentTotalId = 'totalFor_'+this.currentTableId
 
-    localStorage.setItem(tableId ,orderJsonString)
+    localStorage.setItem(this.currentTableId,orderJsonString)
     localStorage.setItem(currentTotalId,this.orderState.orderTotal)
   }
 
   deleteOrderListItem(orderIdToDelete){
     let priceToDelete = this.orderState.orderitems.find(orderList => orderList.id == orderIdToDelete).price
+
     this.orderState.orderTotal = this.orderState.orderTotal - priceToDelete
 
-    let orderList = this.orderState.orderitems.filter( e => e.id !== parseInt(orderIdToDelete))
+    this.orderState.orderitems = this.orderState.orderitems.filter( e => e.id !== parseInt(orderIdToDelete))
 
-    this.setorderState({ orderitems: [...orderList],orderTotal:this.orderState.orderTotal })
+    this.setorderState({ orderitems: [...this.orderState.orderitems],orderTotal:this.orderState.orderTotal })
+
+    let orderJsonString = JSON.stringify([...this.orderState.orderitems])
+    let currentTotalId = 'totalFor_'+this.currentTableId
+
+    localStorage.setItem(this.currentTableId ,orderJsonString)
+    localStorage.setItem(currentTotalId,this.orderState.orderTotal)
   }
 
   refresh(){
@@ -118,7 +102,6 @@ export class App {
   }
 
   orderRefresh(){
-    // console.log('order total'+this.orderState.orderTotal)
     document.querySelector("#orderList").innerHTML = orderList(this.orderState.orderitems,this.deleteOrderListItem)
     this.rootElement.querySelector("#total").children[1].innerHTML = '$'+ this.orderState.orderTotal
   }
