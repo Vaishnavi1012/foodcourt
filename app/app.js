@@ -14,8 +14,7 @@ export class App {
     }
     this.orderState = {
       orderitems:[],
-      orderTotal:0,
-      itemExist:false
+      orderTotal:0
     }
   }
 
@@ -69,54 +68,43 @@ export class App {
       price :price,
       qty:qty
     }
-    console.log(this.orderState.orderitems)
-
-    this.orderState.orderTotal = parseInt(this.orderState.orderTotal) + parseInt(orderItem.price)
-    // if (typeof this.orderState.orderitems !== 'undefined' && this.orderState.orderitems.length > 0 ){
 
     let check = this.orderState.orderitems.find(orderList => orderList.itemId == orderItem.itemId)
-    console.log(check)
 
     if(check){
       let itemQty = this.orderState.orderitems.find(orderList => orderList.itemId == orderItem.itemId).qty
-      // console.log(itemQty)
 
       let itemIndex = this.orderState.orderitems.findIndex((orderList => orderList.itemId ==  orderItem.itemId));
-      // console.log(itemIndex)
-
-      // console.log("Before update: ", this.orderState.orderitems[itemIndex])
 
       //Update items quantity.
       this.orderState.orderitems[itemIndex].qty = parseInt(itemQty) +1
       orderItem.qty = this.orderState.orderitems[itemIndex].qty
-      //Log object to console again.
-      // console.log("After update: ", this.orderState.orderitems[itemIndex])
-      this.orderState.itemExist=true
     }
     else{
-      this.setorderState( { orderitems: [ ...this.orderState.orderitems, orderItem ],orderTotal:this.orderState.orderTotal})
+      this.orderState.orderitems = [ ...this.orderState.orderitems, orderItem ]
     }
 
-    // }
-    
-    console.log(this.orderState.orderitems)
-    let orderJsonString = JSON.stringify([...this.orderState.orderitems])
+    this.orderState.orderTotal = parseInt(this.orderState.orderTotal) + parseInt(orderItem.price)
+    this.setorderState( { orderitems: this.orderState.orderitems,orderTotal:this.orderState.orderTotal})
 
+    //store set states in localstorage
+    let orderJsonString = JSON.stringify([...this.orderState.orderitems])
     let currentTotalId = 'totalFor_'+this.currentTableId
 
     localStorage.setItem(this.currentTableId,orderJsonString)
     localStorage.setItem(currentTotalId,this.orderState.orderTotal)
   }
 
-  deleteOrderListItem(orderIdToDelete){
+  deleteOrderListItem(orderIdToDelete,qty){
     let priceToDelete = this.orderState.orderitems.find(orderList => orderList.id == orderIdToDelete).price
 
-    this.orderState.orderTotal = this.orderState.orderTotal - priceToDelete
+    this.orderState.orderTotal = this.orderState.orderTotal - priceToDelete*parseInt(qty)
 
     this.orderState.orderitems = this.orderState.orderitems.filter( e => e.id !== parseInt(orderIdToDelete))
 
     this.setorderState({ orderitems: [...this.orderState.orderitems],orderTotal:this.orderState.orderTotal })
 
+    //store set states in localstorage
     let orderJsonString = JSON.stringify([...this.orderState.orderitems])
     let currentTotalId = 'totalFor_'+this.currentTableId
 
@@ -130,7 +118,7 @@ export class App {
   }
 
   orderRefresh(){
-    document.querySelector("#orderList").innerHTML = orderList(this.orderState.orderitems,this.deleteOrderListItem,this.orderState.itemExist)
+    document.querySelector("#orderList").innerHTML = orderList(this.orderState.orderitems,this.deleteOrderListItem)
     this.rootElement.querySelector("#total").children[1].innerHTML = '$'+ this.orderState.orderTotal
   }
 

@@ -1,13 +1,8 @@
 
-export function orderListItem(item,deleteOrderListItem,itemExist){
-	if(itemExist){
+export function orderListItem(item,deleteOrderListItem){
+	var price = item.price*item.qty
+
 		return `
-  <li id="${item.id}" data-id="${item.itemId} data-qty="${item.qty}"><h3>${item.name}</h3> <button onclick="app.deleteOrderListItem('${item.id}')" >x</button><span> $${item.price}*${item.qty}</span></li>
+  <li id="${item.id}" data-id="${item.itemId}" data-qty="${item.qty}"><span>${item.name}</span> <button onclick="app.deleteOrderListItem('${item.id}','${item.qty}')" >x</button><span> $ ${price}</span></li>
   `
-	}
-	else{
-		return `
-  <li id="${item.id}" data-id="${item.itemId}" data-qty="${item.qty}"><h3>${item.name}</h3> <button onclick="app.deleteOrderListItem('${item.id}')" >x</button><span> $${item.price}</span></li>
-  `
-	}
   }
