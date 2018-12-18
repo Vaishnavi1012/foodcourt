@@ -14,7 +14,8 @@ export class App {
     }
     this.orderState = {
       orderitems:[],
-      orderTotal:0
+      orderTotal:0,
+      itemExist:false
     }
   }
 
@@ -56,22 +57,49 @@ export class App {
     this.setorderState( { orderitems: [ ...this.orderState.orderitems ],orderTotal:this.orderState.orderTotal})
   }
 
-  addFoodList(menuId,name,price){
+  addFoodList(itemId,name,price,qty){
     if(!typeof this.currentTableId == 'string' || this.currentTableId == 0){
       alert('Please select a table first!!')
       return false
     }
     let orderItem = {
       id: +new Date(),
-      menuId : menuId,
+      itemId : itemId,
       name : name,
-      price :price
+      price :price,
+      qty:qty
     }
+    console.log(this.orderState.orderitems)
 
     this.orderState.orderTotal = parseInt(this.orderState.orderTotal) + parseInt(orderItem.price)
+    // if (typeof this.orderState.orderitems !== 'undefined' && this.orderState.orderitems.length > 0 ){
 
-    this.setorderState( { orderitems: [ ...this.orderState.orderitems, orderItem ],orderTotal:this.orderState.orderTotal})
+    let check = this.orderState.orderitems.find(orderList => orderList.itemId == orderItem.itemId)
+    console.log(check)
 
+    if(check){
+      let itemQty = this.orderState.orderitems.find(orderList => orderList.itemId == orderItem.itemId).qty
+      // console.log(itemQty)
+
+      let itemIndex = this.orderState.orderitems.findIndex((orderList => orderList.itemId ==  orderItem.itemId));
+      // console.log(itemIndex)
+
+      // console.log("Before update: ", this.orderState.orderitems[itemIndex])
+
+      //Update items quantity.
+      this.orderState.orderitems[itemIndex].qty = parseInt(itemQty) +1
+      orderItem.qty = this.orderState.orderitems[itemIndex].qty
+      //Log object to console again.
+      // console.log("After update: ", this.orderState.orderitems[itemIndex])
+      this.orderState.itemExist=true
+    }
+    else{
+      this.setorderState( { orderitems: [ ...this.orderState.orderitems, orderItem ],orderTotal:this.orderState.orderTotal})
+    }
+
+    // }
+    
+    console.log(this.orderState.orderitems)
     let orderJsonString = JSON.stringify([...this.orderState.orderitems])
 
     let currentTotalId = 'totalFor_'+this.currentTableId
@@ -102,7 +130,7 @@ export class App {
   }
 
   orderRefresh(){
-    document.querySelector("#orderList").innerHTML = orderList(this.orderState.orderitems,this.deleteOrderListItem)
+    document.querySelector("#orderList").innerHTML = orderList(this.orderState.orderitems,this.deleteOrderListItem,this.orderState.itemExist)
     this.rootElement.querySelector("#total").children[1].innerHTML = '$'+ this.orderState.orderTotal
   }
 
