@@ -92,3 +92,7 @@ cursor:pointer;
 #details h3 span{
 	float:right;
 }
+#details h3 span.order_price{
+	padding-right:10px;
+	padding-top:3px;
+}
